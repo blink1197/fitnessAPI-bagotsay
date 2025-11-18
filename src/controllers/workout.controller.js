@@ -41,3 +41,30 @@ export const getWorkouts = async (req, res, next) => {
         next(error)
     }
 }
+
+export const updateWorkout = async (req, res, next) => {
+    try {
+        const { name, duration, status } = req.body;
+        const { workoutId } = req.params;
+        const userId = req.user.id;
+
+        // Find workout
+        const workout = await Workout.findOne({ _id: workoutId, userId });
+        if (!workout) throw new AppError("Workout not found or unauthorized", 404);
+
+        // Update only provided fields
+        if (name) workout.name = name;
+        if (duration) workout.duration = duration;
+        if (status) workout.status = status;
+
+        await workout.save();
+
+        res.status(200).json({
+            message: "Workout updated successfully",
+            updatedWorkout: workout._doc
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
