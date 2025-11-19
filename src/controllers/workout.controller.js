@@ -8,7 +8,7 @@ export const addWorkout = async (req, res, next) => {
         const userId = req.user.id;
 
         // Input validation
-        if (!name || !duration || !status) throw new AppError("Missing required fields", 400);
+        if (!name || !duration) throw new AppError("Missing required fields", 400);
 
         // Check if workout name already exists
         // const existingWorkout = await Workout.findOne({ name });
